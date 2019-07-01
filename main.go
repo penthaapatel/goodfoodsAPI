@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/penthaapatel/goodfoodsAPI/service"
@@ -17,9 +19,11 @@ func main() {
 	router.HandleFunc("/api", service.ViewAllDataHandler(collection)).Methods("GET")
 	router.HandleFunc("/api/find/{id}", service.ViewDataByIDHandler(collection)).Methods("GET")
 	router.HandleFunc("/api/delete/{id}", service.DeleteDataByIDHandler(collection)).Methods("DELETE")
+	router.HandleFunc("/api/update/{id}", service.UpdateDataByIDHandler(collection)).Methods("PUT")
 
+	fmt.Println("Starting server on port :5000")
 	if err := http.ListenAndServe(":5000", router); err != nil {
-		panic(err)
+		log.Fatalf("Failed to serve %v", err)
 	}
 
 }

@@ -1,17 +1,17 @@
-
 # goodfoodsAPI
 
-A RESTful API written in Golang accessing MongoDB Database using MongoDB Go Driver
--
+## A RESTful API written in Golang accessing MongoDB Database using MongoDB Go Driver
+
 This API uses a MongoDB database setup on local machine.
 
 [Install MongoDB on Linux/Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
 
- To start MongoDB on Linux/Ubuntu :
+To start MongoDB on Linux/Ubuntu :
 
 `$ sudo service mongod start`
 
 To check MongoDB status
+
 ```bash
 $ service mongod status
 ● mongod.service - High-performance, schema-free document-oriented database
@@ -27,7 +27,9 @@ $ service mongod status
 
 Jun 11 08:28:03 penthaa systemd[1]: Started High-performance, schema-free document-oriented database.
 ```
+
 ## Structure of data
+
 ```go
 type Food struct {
 	ID           primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
@@ -41,26 +43,31 @@ type Food struct {
 	Sodium       float64            `json:"sodium" bson:"sodium"`
 }
 ```
+
 Run `go run main.go` to get started
+
 ## API endpoints
-  ### `http://localhost:5000/api`
+
+### `http://localhost:5000/api`
+
 - #### `POST`: Create a new entry
 
-```curl -d '{"name": "Tahini","energy": 2760,"protein": 25.6,"fat": 57.3,"carbohydrate": 12,"sugars": 1,"dietary-fibre": 0,"sodium": 7}' -X POST http://localhost:5000/api```
+`curl -d '{"name": "Tahini","energy": 2760,"protein": 25.6,"fat": 57.3,"carbohydrate": 12,"sugars": 1,"dietary-fibre": 0,"sodium": 7}' -X POST http://localhost:5000/api`
 
->Sample Output:
+> Sample Output:
 
 ```json
 {
   "InsertedID": "5cff1a95ca89a0ba83d68518"
 }
 ```
-  
-  - #### `GET`: List all available food items
+
+- #### `GET`: List all available food items
 
 `curl -X GET http://localhost:5000/api`
 
->Sample output:
+> Sample output:
+
 ```json
 [
   {
@@ -121,16 +128,13 @@ Run `go run main.go` to get started
 ]
 ```
 
-
-
-
 ### `http://localhost:5000/api/find/{id}`
 
-- #### `GET`: Retrieve data by _id
+- #### `GET`: Retrieve data by \_id
 
 `curl -X GET http://localhost:5000/api/find/5cfeb87611315a2ebc123215`
 
->Sample output:
+> Sample output:
 
 ```json
 {
@@ -148,11 +152,11 @@ Run `go run main.go` to get started
 
 ### `http://localhost:5000/api/delete/{id}`
 
-- #### `DELETE`: Delete data by _id
+- #### `DELETE`: Delete data by \_id
 
 `curl -X DELETE http://localhost:5000/api/delete/5cfeb87611315a2ebc123215`
 
->Sample Output: Shows the deleted data.
+> Sample Output: Shows the deleted data.
 
 ```json
 {
@@ -164,6 +168,28 @@ Run `go run main.go` to get started
   "carbohydrate": 51.7,
   "sugars": 19.7,
   "dietary-fibre": 13,
+  "sodium": 6
+}
+```
+
+### `http://localhost:5000/api/update/{id}`
+
+- #### `PUT`: Update data by \_id
+
+`curl -d '{"name": "Almond milk","energy": 1612,"protein": 13,"fat": 10,"carbohydrate": 52,"sugars": 20,"dietary-fibre": 14,"sodium": 6}' -X PUT http://localhost:5000/api/update/5cfe72bef015083bfbce0100`
+
+> Sample Output: Shows the updated data.
+
+```json
+{
+  "_id": "5cfe72bef015083bfbce0100",
+  "name": "Almond milk",
+  "energy": 1612,
+  "protein": 13,
+  "fat": 10,
+  "carbohydrate": 52,
+  "sugars": 20,
+  "dietary-fibre": 14,
   "sodium": 6
 }
 ```

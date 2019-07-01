@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 //Food represents each food item
@@ -117,4 +118,27 @@ func DeleteDataByIDHandler(collection *mongo.Collection) http.HandlerFunc {
 		collection.FindOneAndDelete(context.TODO(), filter).Decode(&food)
 		printJSON(response, food)
 	}
+}
+
+//UpdateDataByIDHandler for UPDATE operation
+func UpdateDataByIDHandler(collection *mongo.Collection) http.HandlerFunc {
+	return func(response http.ResponseWriter, request *http.Request) {
+		response.Header().Set("content-type", "application/json")
+		vars := mux.Vars(request)
+		id := vars["id"]
+		objectID, _ := primitive.ObjectIDFromHex(id)
+		filter := bson.D{{"_id", objectID}}
+		var food Food
+		if err := json.NewDecoder(request.Body).Decode(&food); err != nil {
+			panic(err)
+		}
+		result := collection.FindOneAndUpdate(context.Background(), filter, bson.M{"$set": food}, options.FindOneAndUpdate().SetReturnDocument(1))
+		decoded := Food{}
+		if err := result.Decode(&decoded); err != nil {
+			panic(err)
+		}
+
+		printJSON(response, decoded)
+	}
+
 }

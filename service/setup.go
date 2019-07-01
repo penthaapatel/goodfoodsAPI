@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,11 +20,13 @@ func ConnectToDB() *mongo.Collection {
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	if err := client.Ping(ctx, nil); err != nil {
-		panic(err)
+		log.Fatalf("Could not connect to database: %v", err)
+	} else {
+		fmt.Println("Connected to mongodb")
 	}
 
 	return client.Database("food").Collection("datafood")
